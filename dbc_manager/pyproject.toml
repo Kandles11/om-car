@@ -1,0 +1,9 @@
+[project]
+name = "dbc-manager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.12"
+dependencies = [
+    "cantools>=40.7.1",
+]
