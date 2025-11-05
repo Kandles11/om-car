@@ -1,0 +1,85 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 257 Requested_Motor_Power_Message: 1 front_zonal
+ SG_ Requested_Motor_Power : 0|8@1- (1,0) [-100|100] "%" Vector__XXX
+
+BO_ 514 Battery_Voltage: 2 rear_zonal
+ SG_ Battery_Voltage : 0|16@1+ (10,0) [0|30] "V"  display
+
+BO_ 513 Drive_Statistics: 3 rear_zonal
+ SG_ Odometer : 8|16@1+ (1,0) [0|65535] "km"  display
+ SG_ Wheel_Speed : 0|8@1+ (1,0) [0|255] "km/h"  display
+
+BO_ 771 Gear_Select: 1 input_zonal
+ SG_ Gear_Control_Switch_State : 0|1@1+ (1,0) [0|1] ""  display
+
+BO_ 770 Horn_Control: 1 input_zonal
+ SG_ Horn_Switch_State : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 769 Light_Controls: 1 input_zonal
+ SG_ Hazard_Lights_Switch_State : 3|1@1+ (1,0) [0|1] ""  light_zonal,display
+ SG_ Right_Blinker_Switch_State : 2|1@1+ (1,0) [0|1] ""  light_zonal,display
+ SG_ Left_Blinker_Switch_State : 1|1@1+ (1,0) [0|1] ""  light_zonal,display
+ SG_ Headlight_Switch_State : 0|1@1+ (1,0) [0|1] ""  front_zonal,display
+
+
+
+
+CM_ SG_ 257 Requested_Motor_Power "The requested motor power";
+CM_ SG_ 514 Battery_Voltage "The voltage of the battery";
+CM_ SG_ 513 Odometer "The odometer reading";
+CM_ SG_ 513 Wheel_Speed "The speed of the wheels";
+CM_ SG_ 771 Gear_Control_Switch_State "Requested state of the gear";
+CM_ SG_ 770 Horn_Switch_State "Requested state of the horn";
+CM_ SG_ 769 Hazard_Lights_Switch_State "Requested state of hazard lights";
+CM_ SG_ 769 Right_Blinker_Switch_State "Requested state of right blinker";
+CM_ SG_ 769 Left_Blinker_Switch_State "Requested state of left blinker";
+CM_ SG_ 769 Headlight_Switch_State "Requested state of headlights";
+
+
+
+VAL_ 771 Gear_Control_Switch_State 0 "forward" 1 "reverse" ;
+VAL_ 770 Horn_Switch_State 0 "off" 1 "on" ;
+VAL_ 769 Hazard_Lights_Switch_State 0 "off" 1 "on" ;
+VAL_ 769 Right_Blinker_Switch_State 0 "off" 1 "on" ;
+VAL_ 769 Left_Blinker_Switch_State 0 "off" 1 "on" ;
+VAL_ 769 Headlight_Switch_State 0 "off" 1 "on" ;
+
+
+
