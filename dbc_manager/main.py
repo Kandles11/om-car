@@ -85,13 +85,13 @@ drive_stats = Message(
 
 battery_voltage = Signal(
     name="Battery Voltage",
-    length=16,
+    length=12,
     minimum=0,
     maximum=30,
     start=0,
     is_signed=False,
     unit="V",
-    conversion=LinearIntegerConversion.factory(scale=10, offset=0),
+    conversion=LinearIntegerConversion.factory(scale=.01, offset=0),
     receivers=["display"],
     comment="The voltage of the battery"
 )

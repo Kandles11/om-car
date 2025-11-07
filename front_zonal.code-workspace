@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": "front_zonal"
+		},
+		{
+			"path": "light_zonal"
+		},
+		{
+			"path": "rear_zonal"
+		},
+		{
+			"name": "input_zonal",
+			"path": "input_zonal"
+		},
+		{
+			"name": "display_zonal",
+			"path": "display_zonal"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"__locale": "cpp",
+			"string": "cpp",
+			"string_view": "cpp"
+		}
+	}
+}

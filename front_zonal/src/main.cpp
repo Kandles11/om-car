@@ -4,9 +4,13 @@
 #include <mcp2515.h>
 #include <mcp2515_defs.h>
 #include <Arduino.h>
+#include <omcar.h>
+
+const float VREF = 5.0;       
+const int ADC_MAX = 1023;  
 
 void setup() {
-    // Serial.begin(9600);
+    Serial.begin(9600);
     // Serial.println("CAN Write - Testing transmission of CAN Bus messages");
     // delay(1000);
 
@@ -23,22 +27,21 @@ void setup() {
 void loop() 
 {
     int sensorValue = analogRead(A1);
-    // Serial.print("Sending value: ");
-    // Serial.println(sensorValue);
-
+    Serial.println("SENSOR VALUE");
+    Serial.println(sensorValue);
+    float minVoltage = 0.15;
+    float maxVoltage = 0.8;
+    float voltage = sensorValue * VREF / ADC_MAX;
+    int dutyCycle = round((float)100* (max(0, min(1, (voltage - minVoltage) / (maxVoltage - minVoltage)))));
+    Serial.println("DUTY CYCLE");
+    Serial.println(dutyCycle);
     tCAN message;
-
-    message.id = 0x100; //formatted in HEX
+    omcar_requested_motor_power_message_t power_msg;
+    power_msg.requested_motor_power = dutyCycle;
+    message.id = OMCAR_REQUESTED_MOTOR_POWER_MESSAGE_FRAME_ID; //formatted in HEX
     message.header.rtr = 0;
-    message.header.length = 8; //formatted in DEC
-    message.data[0] = 0x00;
-    message.data[1] = 0x00;
-    message.data[2] = 0x00;
-    message.data[3] = 0x00; //formatted in HEX
-    message.data[4] = 0x00;
-    message.data[5] = 0x00;
-    message.data[6] = (sensorValue >> 8) & 0x03;
-    message.data[7] = sensorValue & 0xFF;
+    message.header.length = OMCAR_REQUESTED_MOTOR_POWER_MESSAGE_LENGTH; //formatted in DEC
+    omcar_requested_motor_power_message_pack(message.data, &power_msg, OMCAR_REQUESTED_MOTOR_POWER_MESSAGE_LENGTH);
 
     mcp2515_bit_modify(CANCTRL, (1<<REQOP2)|(1<<REQOP1)|(1<<REQOP0), 0);
     mcp2515_send_message(&message);

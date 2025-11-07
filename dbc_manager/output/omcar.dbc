@@ -40,7 +40,7 @@ BO_ 257 Requested_Motor_Power_Message: 1 front_zonal
  SG_ Requested_Motor_Power : 0|8@1- (1,0) [-100|100] "%" Vector__XXX
 
 BO_ 514 Battery_Voltage: 2 rear_zonal
- SG_ Battery_Voltage : 0|16@1+ (10,0) [0|30] "V"  display
+ SG_ Battery_Voltage : 0|16@1+ (0.01,0) [0|30] "V"  display
 
 BO_ 513 Drive_Statistics: 3 rear_zonal
  SG_ Odometer : 8|16@1+ (1,0) [0|65535] "km"  display
