@@ -14,6 +14,7 @@ float odometer = 123.4;
 bool headlightOn = false;
 bool blinkerLeft = false;
 bool blinkerRight = false;
+bool hazardLights = false;
 int pedal = 0;   // 0–100 accelerator pedal position
 bool gear = false;  // false = forward, true = reverse
 
@@ -30,6 +31,7 @@ bool lastBlinkerLeft = false;
 bool lastBlinkerRight = false;
 bool lastBlinkVisible = false;
 bool lastGear = false;
+bool lastHazardLights = false;
 
 // Pre-calculated constants
 const int barX = 120;
@@ -78,21 +80,17 @@ void loop() {
         headlightOn = light_controls_msg.headlight_switch_state;
         blinkerLeft = light_controls_msg.left_blinker_switch_state;
         blinkerRight = light_controls_msg.right_blinker_switch_state;
+        hazardLights = light_controls_msg.hazard_lights_switch_state;
       }
     }
   }
 
-  // Simulate data
+  // Simulate data (only for speed and odometer, lights come from CAN)
   if (now - lastUpdate > 100) {
     lastUpdate = now;
     speed += 0.5;
     if (speed > 45) speed = 0;
     odometer += speed * 0.001;
-
-    headlightOn = ((now / 5000) % 2) == 1;
-    int phase = (now / 3000) % 3;
-    blinkerLeft  = (phase == 1);
-    blinkerRight = (phase == 2);
   }
 
   // Blinker flashing
@@ -112,9 +110,10 @@ void loop() {
   bool blinkerRightChanged = (blinkerRight != lastBlinkerRight);
   bool blinkVisibleChanged = (blinkVisible != lastBlinkVisible);
   bool gearChanged = (gear != lastGear);
+  bool hazardLightsChanged = (hazardLights != lastHazardLights);
   
   bool shouldUpdate = pedalChanged || speedChanged || odometerChanged || 
-                      headlightChanged || blinkerLeftChanged || blinkerRightChanged || blinkVisibleChanged || gearChanged;
+                      headlightChanged || blinkerLeftChanged || blinkerRightChanged || blinkVisibleChanged || gearChanged || hazardLightsChanged;
 
   if (shouldUpdate) {
     // Update tracking variables
@@ -126,6 +125,7 @@ void loop() {
     if (blinkerRightChanged) lastBlinkerRight = blinkerRight;
     if (blinkVisibleChanged) lastBlinkVisible = blinkVisible;
     if (gearChanged) lastGear = gear;
+    if (hazardLightsChanged) lastHazardLights = hazardLights;
 
     // --- DRAW ---
     u8g2.clearBuffer();
@@ -159,12 +159,20 @@ void loop() {
       u8g2.drawStr(0, 10, "F");  // Forward
     }
 
-    // Blinkers
+    // Hazard lights indicator
+    if (hazardLights) {
+      u8g2.drawStr(10, 10, "!");  // Hazard indicator
+    }
+
+    // Blinkers - if hazards are on, both blinkers flash together
     if (blinkVisible) {
-      if (blinkerLeft) {
+      bool showLeft = hazardLights || blinkerLeft;
+      bool showRight = hazardLights || blinkerRight;
+      
+      if (showLeft) {
         u8g2.drawTriangle(5, 30, 15, 25, 15, 35);
       }
-      if (blinkerRight) {
+      if (showRight) {
         u8g2.drawTriangle(123, 30, 113, 25, 113, 35);
       }
     }
