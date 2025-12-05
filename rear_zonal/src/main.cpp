@@ -17,6 +17,7 @@ const float VREF = 5.0;         // set to 3.3 for 3.3V boards
 const int ADC_MAX = 1023;       // 10-bit
 int accelPedalValue = 0;
 double accelPedalValueScaled = 0.0;
+bool reverse = false;
 
 void setup()
 {
@@ -27,26 +28,18 @@ void setup()
     Serial.println("Starting...");
     dac.attach(Wire, 14);
     dac2.attach(Wire, 14);
-    dac.readRegisters();
-    dac2.readRegisters();
+    // dac.readRegisters();
+    // dac2.readRegisters();
     dac2.setID(1);
 
 
     dac.selectVref(MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V);
     dac.selectPowerDown(MCP4728::PWR_DOWN::GND_100KOHM, MCP4728::PWR_DOWN::GND_100KOHM, MCP4728::PWR_DOWN::GND_500KOHM, MCP4728::PWR_DOWN::GND_500KOHM);
     dac.selectGain(MCP4728::GAIN::X2, MCP4728::GAIN::X2, MCP4728::GAIN::X2, MCP4728::GAIN::X2);
-    dac.analogWrite(MCP4728::DAC_CH::A, 111);
-    dac.analogWrite(MCP4728::DAC_CH::B, 222);
-    dac.analogWrite(MCP4728::DAC_CH::C, 333);
-    dac.analogWrite(MCP4728::DAC_CH::D, 444);
 
     dac2.selectVref(MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V, MCP4728::VREF::INTERNAL_2_8V);
     dac2.selectPowerDown(MCP4728::PWR_DOWN::GND_100KOHM, MCP4728::PWR_DOWN::GND_100KOHM, MCP4728::PWR_DOWN::GND_500KOHM, MCP4728::PWR_DOWN::GND_500KOHM);
     dac2.selectGain(MCP4728::GAIN::X2, MCP4728::GAIN::X2, MCP4728::GAIN::X2, MCP4728::GAIN::X2);
-    dac2.analogWrite(MCP4728::DAC_CH::A, 111);
-    dac2.analogWrite(MCP4728::DAC_CH::B, 222);
-    dac2.analogWrite(MCP4728::DAC_CH::C, 333);
-    dac2.analogWrite(MCP4728::DAC_CH::D, 444);
 
     dac.enable(true);
     dac2.enable(true);
@@ -57,8 +50,8 @@ void setup()
     Serial.println("Finished setting up DACs!");
 
     delay(50);
-    dac.analogWrite(2458, 2492, 2542, 0);
-    dac2.analogWrite(2542, 2458, 0,0);
+    dac.analogWrite(2492, 2458, 2542, 0);
+    dac2.analogWrite(2458, 2542, 0,0);
     delay(50);
 
     Canbus.init(CANSPEED_500);
@@ -78,7 +71,7 @@ void setMotors(double dutyCycle)
 
     int dutyCycleCenter = center + (int)(((double)range)*dutyCycle);
 
-    dac.analogWrite(dutyCycleCenter - diff, 2492, dutyCycleCenter + diff, 0);
+    dac.analogWrite(2492, dutyCycleCenter - diff, dutyCycleCenter + diff, 0);
 }
 
 
@@ -99,39 +92,14 @@ void loop()
                 // Serial.print("Accel pedal value: ");
                 // Serial.println(accelPedalValue);
             }
+            if (message.id == OMCAR_GEAR_SELECT_FRAME_ID && message.header.length == OMCAR_GEAR_SELECT_LENGTH)
+            {
+                omcar_gear_select_t gear_select_msg;
+                omcar_gear_select_unpack(&gear_select_msg, message.data, OMCAR_GEAR_SELECT_LENGTH);
+                reverse = (bool)gear_select_msg.gear_control_switch_state;
+            }
         }
     }
-    setMotors(accelPedalValueScaled);
+    setMotors(accelPedalValueScaled * (reverse ? -1 : 1));
     delay(20);
-}
-
-void printStatus()
-{
-    Serial.println("NAME     Vref  Gain  PowerDown  DACData");
-    for (int i = 0; i < 4; ++i)
-    {
-        Serial.print("DAC");
-        Serial.print(i, DEC);
-        Serial.print("   ");
-        Serial.print("    ");
-        Serial.print(dac.getVref(i), BIN);
-        Serial.print("     ");
-        Serial.print(dac.getGain(i), BIN);
-        Serial.print("       ");
-        Serial.print(dac.getPowerDown(i), BIN);
-        Serial.print("       ");
-        Serial.println(dac.getDACData(i), DEC);
-
-        Serial.print("EEPROM");
-        Serial.print(i, DEC);
-        Serial.print("    ");
-        Serial.print(dac.getVref(i, true), BIN);
-        Serial.print("     ");
-        Serial.print(dac.getGain(i, true), BIN);
-        Serial.print("       ");
-        Serial.print(dac.getPowerDown(i, true), BIN);
-        Serial.print("       ");
-        Serial.println(dac.getDACData(i, true), DEC);
-    }
-    Serial.println(" ");
 }

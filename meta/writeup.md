@@ -4,7 +4,7 @@
 
 The electric go-kart didn't start its life as a go-kart, but rather an electric wheelchair. To be specific, the [Jazzy Select][wheelchair] from Pride Mobility. Our robotics group received this wheelchair purely by chance, whenever we received an email from somebody in the community asking if we wanted it. Because of our tendency to collect absolute junk, we obviously took it immediately. Shortly after, we had our own electric wheelchair we could call our own. 
 
-From this point, we wanted to get it running just to find out what it was capable of, or if it even drives at all. We found some leftover 12V lithium batteries, and with 6 batteries, we had the 24V the wheelchair was looking for. With a push of the power button—VOILA—we had life. We see a flashing light and beeping sounds, and we immediately hop into the seat and take it for a spin.
+From this point, we wanted to get it running just to find out what it was capable of, or if it even drives at all. We found some leftover 12V lithium batteries, and with 6 batteries, we had the 24V the wheelchair was looking for. With a push of the power button-VOILA-we had life. We see a flashing light and beeping sounds, and we immediately hop into the seat and take it for a spin.
 
 The first thing we notice is the surprising amount of speed and power behind the chair. We had so much fun toying around and pushing the limits of the chair, until we had our first "incident." Our dear friend [Jason][jason] was speeding through the building, until he wasn't. We hear him start laughing, yelling for us to come over. We make our way over when we realize that he had punched a hole in the sheetrock with the wheelchair. We do our best to clean up the mess, and move on, hoping University officials don't notice. 
 
@@ -45,6 +45,10 @@ With a solid infrastructure built up, we now had the opportunity to tack on as m
 - Input controls
 
 With all of these accessories, we decided to load the car full of Arduinos to manage everything. We have a total of 5 microcontrollers handling everything on the vehicle, each one controlling everything in the area on the vehicle. For our situation, this gives us the front zone, rear zone, instrument cluster zone, display zone, and the rear-lighting zone. While some of these could have been consolidated, we separated them for space concerns to make room for other miscellaneous electronics, like relays. 
+
+From this point, it was necessary to start the long-term planning of the electrical hardware and how things would be laid out on the final car, so the following electrical diagram was created.
+
+![Electrical diagram of the go-kart](images/electrical.png)
 
 ## References
 [wheelchair]: https://www.pridemobility.com/jazzy-power-chairs/jazzy-select/  
